@@ -3,6 +3,7 @@ package com.contactlist.fullstackbackend.controller;
 import com.contactlist.fullstackbackend.exception.UserNotFoundException;
 import com.contactlist.fullstackbackend.model.User;
 import com.contactlist.fullstackbackend.repository.UserRepository;
+import com.contactlist.fullstackbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,42 +14,32 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping("/user")
-    User newUser(@RequestBody User newUser) {
-        return userRepository.save(newUser);
+    public String add(@RequestBody User user) {
+        userService.saveUser(user);
+        return "new contact is add";
     }
 
     @GetMapping("/users")
-    List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 
     @GetMapping("/user/{id}")
-    User getUserById(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(()-> new UserNotFoundException(id));
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
     @PutMapping("/user/{id}")
-    User updateUser(@RequestBody User newUser, @PathVariable Long id) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    user.setName(newUser.getName());
-                    user.setLastName(newUser.getLastName());
-                    user.setEmail(newUser.getEmail());
-                    user.setPhoneNumber(newUser.getPhoneNumber());
-                    return userRepository.save(user);
-                }).orElseThrow(() -> new UserNotFoundException(id));
+    public User updateUser(@RequestBody User newUser, @PathVariable Long id) {
+        return userService.updateUser(newUser, id);
     }
 
     @DeleteMapping("/user/{id}")
-    String deleteUser(@PathVariable Long id) {
-        if(!userRepository.existsById(id)) {
-            throw new UserNotFoundException(id);
-        }
-        userRepository.deleteById(id);
-        return "User with id " + id + " has been deleted successfully.";
+    public String deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return "User with id " + id + " has been deleted successfully";
     }
 }
