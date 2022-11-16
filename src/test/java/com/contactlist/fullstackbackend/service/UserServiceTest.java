@@ -1,6 +1,5 @@
-/*package com.contactlist.fullstackbackend;
+package com.contactlist.fullstackbackend.service;
 
-import com.contactlist.fullstackbackend.controller.UserController;
 import com.contactlist.fullstackbackend.model.User;
 import com.contactlist.fullstackbackend.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class UserControllerTest {
+public class UserServiceTest {
 
     @Mock
     UserRepository userRepository;
@@ -33,8 +32,10 @@ public class UserControllerTest {
         var listUsers = List.of(new User(), new User());
 
         Mockito.when(userRepository.findAll()).thenReturn(listUsers);
+        var userService = new UserServiceImpl(userRepository);
+        var sut = userService.getAllUsers();
 
-        assertEquals(listUsers, userRepository.findAll());
+        assertEquals(sut, listUsers);
     }
 
     @Test
@@ -42,10 +43,9 @@ public class UserControllerTest {
         User user = new User();
 
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        UserController userController = new UserController();
-        var sut = userController.getUserById
+        var userService = new UserServiceImpl(userRepository);
+        var sut = userService.getUserById(1L);
 
-        assertEquals());
+        assertEquals(sut, user);
     }
-
-}*/
+}
