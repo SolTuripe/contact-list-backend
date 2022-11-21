@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -47,5 +48,31 @@ public class UserServiceTest {
         var sut = userService.getUserById(1L);
 
         assertEquals(sut, user);
+    }
+
+    @Test
+    void canUpdateAUser() {
+        User user = new User();
+
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.save(user)).thenReturn(user);
+
+        user.setId(1L);
+        var userService = new UserServiceImpl(userRepository);
+        var sut = userService.updateUser(user, 1L);
+
+        assertEquals(sut, user);
+    }
+
+    @Test
+    void canDeleteAUser() {
+        User user = new User();
+
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        var userService = new UserServiceImpl(userRepository);
+        var sut = userService.deleteUser(1L);
+
+        assertTrue(sut);
     }
 }

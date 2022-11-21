@@ -1,10 +1,9 @@
 package com.contactlist.fullstackbackend.controller;
 
-import com.contactlist.fullstackbackend.exception.UserNotFoundException;
 import com.contactlist.fullstackbackend.model.User;
-import com.contactlist.fullstackbackend.repository.UserRepository;
 import com.contactlist.fullstackbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

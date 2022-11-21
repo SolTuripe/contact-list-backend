@@ -5,8 +5,10 @@ import com.contactlist.fullstackbackend.model.User;
 import com.contactlist.fullstackbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,6 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User newUser, Long id) {
+
         return userRepository.findById(id)
                 .map(user -> {
                     user.setName(newUser.getName());
@@ -47,7 +50,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public boolean deleteUser(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if(!optionalUser.isPresent()) {
+            return false;
+        }
+        userRepository.delete(optionalUser.get());
+        return true;
     }
 }
